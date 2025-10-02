@@ -1,0 +1,13 @@
+train: ../train/images
+val: ../valid/images
+test: ../test/images
+
+nc: 10
+names: ['Acne', 'Blackheads', 'Dark-Spots', 'Dry-Skin', 'Englarged-Pores', 'Eyebags', 'Oily-Skin', 'Skin-Redness', 'Whiteheads', 'Wrinkles']
+
+roboflow:
+  workspace: vishnucv
+  project: face-skin-problems-k18nr
+  version: 1
+  license: CC BY 4.0
+  url: https://universe.roboflow.com/vishnucv/face-skin-problems-k18nr/dataset/1
