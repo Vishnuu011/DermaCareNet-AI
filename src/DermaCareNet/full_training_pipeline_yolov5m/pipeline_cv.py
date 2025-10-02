@@ -30,8 +30,8 @@ class Yolov5TrainingPipeline:
         Initialize the YOLOv5 training pipeline.
 
         Args:
-            url (str): Google Drive or dataset URL.
-            prefix (str): URL prefix for Google Drive file download.
+            url - str: Google Drive or dataset URL.
+            prefix - str: URL prefix for Google Drive file download.
         """
 
         self.url = url
@@ -43,8 +43,8 @@ class Yolov5TrainingPipeline:
         Download dataset from Google Drive and extract it.
 
         Args:
-            url (str): Google Drive URL of the dataset.
-            prefix (str): Prefix for constructing the gdown download link.
+            url - str: Google Drive URL of the dataset.
+            prefix - str: Prefix for constructing the gdown download link.
 
         Raises:
             ComputerVisionYolov5Exception: If download or extraction fails.
@@ -97,8 +97,8 @@ class Yolov5TrainingPipeline:
         Generate a custom YOLOv5m model config with the specified number of classes.
 
         Args:
-            num_classes (int): Number of classes for detection.
-            filename (str, optional): Output config filename. Defaults to "custom_yolov5m.yaml".
+            num_classes - int : Number of classes for detection.
+            filename - str, optional : Output config filename. Defaults to "custom_yolov5m.yaml".
 
         Raises:
             ComputerVisionYolov5Exception: If config generation fails.
@@ -174,11 +174,11 @@ class Yolov5TrainingPipeline:
         Train YOLOv5m model with custom dataset.
 
         Args:
-            img_size (int): Training image size.
-            batch (int): Batch size for training.
-            epochs (int): Number of training epochs.
-            data_yaml (str): Path to data.yaml file.
-            yolo5m (str): Pretrained YOLOv5m weights file.
+            img_size - int: Training image size.
+            batch - int: Batch size for training.
+            epochs - int: Number of training epochs.
+            data_yaml - str: Path to data.yaml file.
+            yolo5m - str: Pretrained YOLOv5m weights file.
 
         Raises:
             ComputerVisionYolov5Exception: If training fails.
