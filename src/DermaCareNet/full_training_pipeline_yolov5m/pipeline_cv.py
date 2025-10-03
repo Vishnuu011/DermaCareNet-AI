@@ -190,26 +190,32 @@ class Yolov5TrainingPipeline:
         """
 
         try:
-            cmd = textwrap.dedent(f"""
-                cd yolov5 && \
-                python train.py --img {img_size} \
-                --batch {batch} \
-                --epochs {epochs} \
-                --data {data_yaml} \
-                --cfg ./models/custom_yolov5m.yaml \
-                --weights {yolo5m} \
-                --name yolov5m_640_results \
-                --cache
-            """)
+            cmd = [
+                "python", "train.py",
+                "--img", str(img_size),
+                "--batch", str(batch),
+                "--epochs", str(epochs),
+                "--data", data_yaml,
+                "--cfg", "./models/custom_yolov5m.yaml",
+                "--weights", yolo5m,
+                "--device", "cpu",
+                "--name", "yolov5m_640_results",
+                "--cache"
+            ]
 
-            print(f"Running YOLOv5 training:\n{cmd}")
-            subprocess.run(cmd, shell=True, check=True)
+            print("Running YOLOv5 training...")
+            result = subprocess.run(
+                cmd, cwd="yolov5", 
+                capture_output=True, 
+                text=True
+            )
+
+            print("STDOUT:\n", result.stdout)
+            print("STDERR:\n", result.stderr)
 
         except subprocess.CalledProcessError as e:
             print("Training failed:", e)
             raise ComputerVisionYolov5Exception(e, sys)
-        except Exception as e:
-            raise ComputerVisionYolov5Exception(e, sys)  
          
 
     def initialize_pipeline(self) -> None:
@@ -234,7 +240,7 @@ class Yolov5TrainingPipeline:
             self.yolo5m_training(
                 img_size=640,
                 batch=8,
-                epochs=2,
+                epochs=1,
                 data_yaml='../data.yaml',
                 yolo5m='yolov5m.pt'
             )
