@@ -1,0 +1,211 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>DermaCareNet-AI | YOLOv11 Skin Detection</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+	<style>
+		body {
+			background: #f8f9fa;
+		}
+
+		header {
+			background: #1b2d6b;
+		}
+
+		h1 {
+			color: white;
+			font-weight: 700;
+		}
+
+		.upload-image,
+		.res-part2 {
+			min-height: 400px;
+			max-height: 500px;
+			overflow-y: auto;
+		}
+
+		.resp-img {
+			max-width: 100%;
+			height: auto;
+			border-radius: 10px;
+			margin-top: 10px;
+		}
+
+		.pred-text {
+			text-align: left;
+			margin-top: 10px;
+			font-size: 16px;
+		}
+
+		#loading {
+			position: fixed;
+			left: 0;
+			top: 0;
+			width: 100%;
+			height: 100%;
+			z-index: 999999;
+			background: rgba(255, 255, 255, 0.7);
+			display: none;
+		}
+
+		.loader {
+			border: 8px solid #f3f3f3;
+			border-top: 8px solid #1b2d6b;
+			border-radius: 50%;
+			width: 60px;
+			height: 60px;
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			margin-top: -30px;
+			margin-left: -30px;
+			animation: spin 2s linear infinite;
+		}
+
+		@keyframes spin {
+			from {
+				transform: rotate(0deg);
+			}
+
+			to {
+				transform: rotate(360deg);
+			}
+		}
+	</style>
+</head>
+
+<body>
+	<header class="text-center py-4 mb-4">
+		<h1>DERMACARENET-AI APP</h1>
+	</header>
+
+	<div class="container">
+		<form class="input-group upload-data row mb-3">
+			<div class="col-md-6">
+				<button type="button" class="btn btn-primary col-12" id="uload">Upload Image</button>
+			</div>
+			<div class="col-md-6">
+				<button id="send" type="button" class="btn btn-success col-12">Predict</button>
+			</div>
+
+			<input type="hidden" id="url" value="../predict" />
+			<input type="file" id="fileinput" style="display:none;" accept="image/*" />
+		</form>
+
+		<div class="row">
+			<!-- Uploaded Image -->
+			<div class="col-md-6 mb-4">
+				<div class="card shadow upload-image text-center p-3">
+					<video autoplay id="video"
+						poster="https://img.freepik.com/free-vector/group-young-people-posing-photo_52683-18824.jpg"
+						style="width:100%; border-radius:10px;"></video>
+					<img id="photo" src="" style="display:none; width:100%; border-radius:10px;" />
+				</div>
+			</div>
+
+			<!-- Prediction Results -->
+			<div class="col-md-6 mb-4">
+				<div class="card shadow res-part2 text-center p-3">
+					<h4 class="mb-3">Prediction Results</h4>
+					<div id="results" class="pred-text"></div>
+					<img id="predictedImage" class="resp-img" src="" />
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="loading">
+		<div class="loader"></div>
+	</div>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+   <script>
+	let base_data = "";
+
+	function sendRequest(base64Data) {
+		if (!base64Data) {
+			alert("Please upload an image first!");
+			return;
+		}
+
+		const url = $("#url").val();
+		$("#loading").show();
+
+		$.ajax({
+			url: url,
+			type: "POST",
+			cache: false,
+			async: true,
+			headers: {
+				"Content-Type": "application/json",
+				"Access-Control-Allow-Origin": "*"
+			},
+			data: JSON.stringify({ image: base64Data }),
+			success: function (res) {
+				$("#loading").hide();
+
+				const { detected_conditions, confidence, recommendations, result_image } = res;
+
+				let html = "";
+
+				// 1️⃣ Predicted Image first
+				html += `<img id="predictedImage" src="data:image/jpeg;base64,${result_image}" class="resp-img mb-3" />`;
+
+				// 2️⃣ Detected Conditions
+				html += `<p><strong>Detected Conditions:</strong> ${detected_conditions}</p>`;
+
+				// 3️⃣ Confidence
+				html += `<p><strong>Confidence:</strong> ${confidence ? confidence.join(", ") : "N/A"}</p>`;
+
+				// 4️⃣ Recommendations (Markdown rendered)
+				html += `<div><strong>Recommendations:</strong><br>${marked.parse(recommendations)}</div>`;
+
+				$("#results").html(html);
+			},
+			error: function (err) {
+				$("#loading").hide();
+				alert("Error: " + err.responseText);
+			}
+		});
+	}
+
+	$(document).ready(function () {
+		$("#uload").click(function () {
+			$("#fileinput").trigger("click");
+		});
+
+		$("#fileinput").change(function () {
+			if (this.files && this.files[0]) {
+				const reader = new FileReader();
+				reader.onload = function (e) {
+					const url = e.target.result;
+					const img = new Image();
+					img.onload = function () {
+						const canvas = document.createElement("canvas");
+						const ctx = canvas.getContext("2d");
+						canvas.height = this.height;
+						canvas.width = this.width;
+						ctx.drawImage(this, 0, 0);
+						base_data = canvas.toDataURL("image/jpeg", 1.0).replace(/^data:image.+;base64,/, "");
+					};
+					img.src = url;
+					$("#photo").attr("src", url).show();
+					$("#video").hide();
+				};
+				reader.readAsDataURL(this.files[0]);
+			}
+		});
+
+		$("#send").click(function () {
+			sendRequest(base_data);
+		});
+	});
+   </script>
+
+</html>
+```
