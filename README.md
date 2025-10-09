@@ -8,46 +8,40 @@ DermaCareNet-AI is an intelligent dermatology assistant that analyzes facial ski
 
 ## The system features:
 
-Real-time skin disease detection
-LLM-based recommendations (via Groq API and Langchain)
-Web-based interactive dashboard (Flask + HTML/Bootstrap)
-Automatic visual output with annotated images
-Seamless markdown-formatted insights in frontend
-
-## 🧠 Architecture
-
-Frontend (HTML/JS)
-↓ (Base64 Image)
-Flask API (/predict)
-↓
-YOLOv11 Model → Detected Skin Conditions + Confidence
-↓
-Groq LLM Agent → Recommendations via Serper search
-↓
-JSON Response → Markdown-rendered output in browser
+- Real-time skin disease detection
+- LLM-based recommendations (via Groq API and Langchain)
+- Web-based interactive dashboard (Flask + HTML/Bootstrap)
+- Automatic visual output with annotated images
+- Seamless markdown-formatted insights in frontend
 
 ## 🚀 Features
 
-✅ Upload face image (JPG/PNG)
-✅ Automatic detection of facial conditions
-✅ Confidence levels for predictions
-✅ AI-generated skincare recommendations
-✅ Real-time visualization of annotated results
-✅ Markdown-rendered suggestions for readability
+- ✅ Upload face image (JPG/PNG)
+- ✅ Automatic detection of facial conditions
+- ✅ Confidence levels for predictions
+- ✅ AI-generated skincare recommendations
+- ✅ Real-time visualization of annotated results
+- ✅ Markdown-rendered suggestions for readability
 
 ## 🧩 Tech Stack
 
 Component Technology
-Frontend HTML, Bootstrap 4, jQuery, Marked.js
-Backend Flask, Python
-ML Model YOLOv11 (Ultralytics)
-LLM Engine Groq Llama 3 (via langchain_groq)
-Web Search SerpAPI
-Deployment Localhost / Render / Hugging Face Spaces
-⚙️ Setup Instructions
-1️⃣ Clone Repository
+
+- Frontend HTML, Bootstrap 4, jQuery, Marked.js
+- Backend Flask, Python
+- ML Model YOLOv11 (Ultralytics)
+- LLM Engine Groq Llama 3 (via langchain_groq)
+- Web Search SerpAPI
+
+# ⚙️ Setup Instructions
+
+# 1️⃣ Clone Repository
+
+```bash
 git clone https://github.com/Vishnuu011/DermaCareNet-AI.git
+
 cd DermaCareNet-AI
+```
 
 ## 2️⃣ Create Virtual Environment
 
@@ -81,20 +75,24 @@ python app.py
 Access app at:
 👉 http://127.0.0.1:5000
 
-🖼️ Frontend Description
-Upload Button: Choose an image for detection.
-Predict Button: Sends image to backend.
-Detected Image: Annotated YOLOv11 output.
-Results Section:
-Detected Conditions
-Confidence Scores
-AI Recommendations (Markdown)
+# 🖼️ Frontend Description
+
+- Upload Button: Choose an image for detection.
+- Predict Button: Sends image to backend.
+- Detected Image: Annotated YOLOv11 output.
+- Results Section:
+- Detected Conditions
+- Confidence Scores
+- AI Recommendations (Markdown)
+
+```bash
 🧪 Example Output
 
 Detected Conditions: Acne, Pigmentation
 Confidence: 0.92, 0.81
+```
 
-Recommendations (Markdown rendered):
+- Recommendations (Markdown rendered):
 
 ### 🌿 Possible Causes
 
@@ -115,12 +113,14 @@ Recommendations (Markdown rendered):
 
 If inflammation or scarring increases after 2 weeks.
 
-🛠️ Troubleshooting
+# 🛠️ Troubleshooting
+
 Issue Cause Fix
 401 Invalid API key Wrong SerpAPI key Update .env and restart Flask
 Blank recommendations LLM error Ensure Groq key and model name are valid
 rm not recognized Windows OS Use shutil.rmtree() instead
-📜 License
+
+# 📜 License
 
 MIT License © 2025 DermaCareNet-AI Team
 
