@@ -34,6 +34,37 @@ def google_serpapi_search(query: str) -> str:
 
 def skin_disease_agent(model: str) -> Optional[AgentExecutor]:
 
+    """
+    Creates and returns a dermatology-focused AI agent that analyzes detected 
+    skin conditions using Groq LLM and search tools.
+
+    This agent is designed as part of DermaCareNet-AI and uses a Groq-hosted 
+    language model to provide medical insights about skin diseases. It leverages 
+    a search tool (e.g., Google SerpAPI) to gather information from trusted 
+    dermatology sources before generating structured summaries.
+
+    The generated summary includes:
+        1. Condition overview
+        2. Common causes
+        3. Hygiene and prevention tips
+        4. Diet recommendations
+        5. Over-the-counter or natural treatments
+        6. Possible complications if untreated
+        7. When to consult a dermatologist
+
+    Args:
+        model (str): The name of the Groq model to be used (e.g., "mixtral-8x7b" or "llama2-70b-chat").
+
+    Returns:
+        Optional[AgentExecutor]: Configured LangChain AgentExecutor capable of 
+        using search tools and generating dermatological reports. Returns None 
+        if initialization fails.
+
+    Raises:
+        ComputerVisionYolov11Exception: If any initialization or runtime error 
+        occurs during the setup of the Groq LLM or AgentExecutor.
+    """
+
     try:
         llm = ChatGroq(
         temperature=0,

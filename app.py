@@ -35,6 +35,31 @@ def home():
 
 
 def detect_and_predict_class(img_path: str, best_model: str) -> Tuple[List[str], List[float]]:
+
+    """
+    Detects and classifies objects skin conditions in an image using a YOLO model.
+
+    This function loads a trained YOLO model and performs object detection on the
+    provided image. It returns the detected class names and their corresponding
+    confidence scores.
+
+    Args:
+        img_path (str): Path to the input image file.
+        best_model (str): Path to the trained YOLO model weights (e.g., 'best.pt').
+
+    Returns:
+        Tuple[List[str], List[float]]:
+            - List of detected class names.
+            - List of corresponding confidence scores.
+
+    Prints:
+        Detected classes with confidence values to the console for debugging.
+
+    Raises:
+        FileNotFoundError: If the input image or model file is not found.
+        ComputerVisionYolov11Exception: If any other error occurs during detection or inference.
+    """
+
     try:
         model = YOLO(best_model)
         results = model(img_path, save=True) 
@@ -63,6 +88,28 @@ def detect_and_predict_class(img_path: str, best_model: str) -> Tuple[List[str],
 @app.route("/predict", methods=["GET", "POST"])
 @cross_origin()
 def predictRoute() -> Response:
+
+    """
+    Flask route for skin disease detection and dermatological recommendations.
+
+    Workflow:
+        1. Receives a Base64-encoded image from the POST request body.
+        2. Decodes and saves the image to disk.
+        3. Runs YOLO object detection to identify skin conditions.
+        4. Encodes the prediction image (with bounding boxes) back to Base64.
+        5. Passes detected conditions to the DermaCareNet-AI agent (LLM).
+        6. Returns JSON with:
+            - Base64 encoded result image
+            - Detected conditions
+            - Confidence scores
+            - AI-generated recommendations
+
+    Returns:
+        Response: JSON object containing model predictions and recommendations.
+
+    Raises:
+        ComputerVisionYolov11Exception: For any runtime or inference errors.
+    """
 
     try:
         image = request.json["image"]
